@@ -1,25 +1,62 @@
 package com.naman.stickernotes
 
+import android.app.Activity
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
+import android.widget.Adapter
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.naman.stickernotes.Data.Note
+import kotlinx.android.synthetic.main.activity_main.view.*
+import kotlinx.android.synthetic.main.item_note.view.*
 
-class NotesAdapter(private val mcontext: Context, private val listener:InNotesRvAdapter) : RecyclerView.Adapter<NotesAdapter.ViewHolder>() {
+class NotesAdapter(private val mcontext: Context, private val listener: InNotesRvAdapter, s: String) : RecyclerView.Adapter<NotesAdapter.ViewHolder>() {
 
-val allNotes=ArrayList<Note>()
+private val allNotes=ArrayList<Note>()
+    private val comingFrom:String=s
+private var previousClicked:Int=-1
+    private  lateinit var previousView:View
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
        val viewHolder=ViewHolder(LayoutInflater.from(mcontext).inflate(R.layout.item_note,parent,false))
 
-        viewHolder.deleteButton.setOnClickListener {
+        if(comingFrom.equals("from main")){
+            viewHolder.deleteButton.visibility=View.VISIBLE
+        }
 
+
+        viewHolder.deleteButton.setOnClickListener {
             listener.onItemClicked(allNotes[viewHolder.adapterPosition])
+
+        }
+        viewHolder.itemView.setOnClickListener {
+
+
+            if(comingFrom != "from main") {
+                if(previousClicked!=viewHolder.adapterPosition) {
+
+
+                    viewHolder.check.visibility = View.VISIBLE
+                    if(previousClicked!=-1){
+                        previousView.check.visibility=View.GONE
+                    }
+                    previousClicked = viewHolder.adapterPosition
+                    previousView=it
+                    listener.onItemClicked(allNotes[viewHolder.adapterPosition])
+
+
+                }else{
+
+                    previousClicked=-1
+                    viewHolder.check.visibility = View.GONE
+                    listener.onItemClicked(null)
+
+                }
+            }
         }
         return viewHolder
     }
@@ -28,6 +65,7 @@ val allNotes=ArrayList<Note>()
 
         val currentNote=allNotes[position]
         holder.Text.setText(currentNote.text)
+
 
 
     }
@@ -41,11 +79,14 @@ val allNotes=ArrayList<Note>()
         return allNotes.size
     }
     class ViewHolder(itemView:View):RecyclerView.ViewHolder(itemView){
-        val Text=itemView.findViewById<TextView>(R.id.text)
-        val deleteButton=itemView.findViewById<ImageView>(R.id.delete)
+
+        val Text: TextView =itemView.findViewById<TextView>(R.id.text)
+        val deleteButton: ImageView =itemView.findViewById<ImageView>(R.id.delete)
+        val check: ImageView =itemView.findViewById<ImageView>(R.id.check)
 
     }
     interface InNotesRvAdapter{
-        fun onItemClicked(note:Note)
+
+        fun onItemClicked(note: Note?)
     }
 }

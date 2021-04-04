@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.naman.stickernotes.Data.Note
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlin.math.log
 
 class MainActivity : AppCompatActivity(), NotesAdapter.InNotesRvAdapter {
 
@@ -22,7 +21,7 @@ class MainActivity : AppCompatActivity(), NotesAdapter.InNotesRvAdapter {
 
 
         recyclerView.layoutManager =LinearLayoutManager(this)
-        val noteAdapter=NotesAdapter(this,this)
+        val noteAdapter=NotesAdapter(this,this,"from main")
         recyclerView.adapter=noteAdapter
 
         viewModel=ViewModelProvider(this,ViewModelProvider.AndroidViewModelFactory.getInstance(application)).get(NoteViewModel::class.java)
@@ -37,9 +36,11 @@ class MainActivity : AppCompatActivity(), NotesAdapter.InNotesRvAdapter {
     }
 
 
-    override fun onItemClicked(note: Note) {
+    override fun onItemClicked(note: Note?) {
 
-        viewModel.deleteNote(note)
+        if (note != null) {
+            viewModel.deleteNote(note)
+        }
     }
 
     fun submitNote(view: View) {

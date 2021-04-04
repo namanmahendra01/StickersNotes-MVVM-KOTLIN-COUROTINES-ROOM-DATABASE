@@ -10,6 +10,8 @@ class NoteRepository(private val noteDao:NoteDao) {
 
     val allNotes:LiveData<List<Note>> = noteDao.getAllNotes()
 
+    val notesTittle:List<Note> = noteDao.getNotesTittle()
+
     suspend fun insert(note:Note){
 
         noteDao.insert(note)
