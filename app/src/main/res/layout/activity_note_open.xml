@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".NoteOpen">
+
+    <include layout="@layout/snippet_note_bar"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/topbar"
+        >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:textSize="20sp"
+                android:background="@drawable/rectangular_border"
+                android:padding="10dp"
+                android:id="@+id/textEt"
+                />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:textSize="25sp"
+                android:minHeight="200dp"
+                android:layout_below="@+id/textEt"
+                android:id="@+id/fulltextEt"
+                android:background="@drawable/rectangular_border"
+                android:padding="10dp"
+                android:gravity="top"
+              />
+
+        </RelativeLayout>
+    </ScrollView>
+
+
+</RelativeLayout>

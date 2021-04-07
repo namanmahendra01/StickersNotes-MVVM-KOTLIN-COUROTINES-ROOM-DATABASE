@@ -26,13 +26,15 @@ private var previousClicked:Int=-1
 
         if(comingFrom.equals("from main")){
             viewHolder.deleteButton.visibility=View.VISIBLE
+
         }
 
 
         viewHolder.deleteButton.setOnClickListener {
-            listener.onItemClicked(allNotes[viewHolder.adapterPosition])
+            listener.onItemClicked(allNotes[viewHolder.adapterPosition],"for_delete")
 
         }
+
         viewHolder.itemView.setOnClickListener {
 
 
@@ -46,16 +48,19 @@ private var previousClicked:Int=-1
                     }
                     previousClicked = viewHolder.adapterPosition
                     previousView=it
-                    listener.onItemClicked(allNotes[viewHolder.adapterPosition])
+                    listener.onItemClicked(allNotes[viewHolder.adapterPosition],"get_checked")
 
 
                 }else{
 
                     previousClicked=-1
                     viewHolder.check.visibility = View.GONE
-                    listener.onItemClicked(null)
+                    listener.onItemClicked(null,"none")
 
                 }
+            }else{
+                listener.onItemClicked(allNotes[viewHolder.adapterPosition],"intent_action")
+
             }
         }
         return viewHolder
@@ -80,13 +85,14 @@ private var previousClicked:Int=-1
     }
     class ViewHolder(itemView:View):RecyclerView.ViewHolder(itemView){
 
-        val Text: TextView =itemView.findViewById<TextView>(R.id.text)
-        val deleteButton: ImageView =itemView.findViewById<ImageView>(R.id.delete)
-        val check: ImageView =itemView.findViewById<ImageView>(R.id.check)
+        val Text: TextView =itemView.findViewById(R.id.text)
+        val deleteButton: ImageView =itemView.findViewById(R.id.delete)
+        val check: ImageView =itemView.findViewById(R.id.check)
+
 
     }
     interface InNotesRvAdapter{
 
-        fun onItemClicked(note: Note?)
+        fun onItemClicked(note: Note?,action:String)
     }
 }

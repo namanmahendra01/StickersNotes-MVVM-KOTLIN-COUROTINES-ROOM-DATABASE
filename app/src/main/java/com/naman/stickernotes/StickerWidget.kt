@@ -3,8 +3,10 @@ package com.naman.stickernotes
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.widget.RemoteViews
 
 
@@ -29,12 +31,16 @@ class StickerWidget : AppWidgetProvider() {
         }
     }
 
+    override fun onReceive(context: Context?, intent: Intent?) {
+        super.onReceive(context, intent)
+    }
     override fun onDeleted(context: Context, appWidgetIds: IntArray) {
         // When the user deletes the widget, delete the preference associated with it.
         for (appWidgetId in appWidgetIds) {
             deleteTitlePref(context, appWidgetId)
         }
     }
+
 
     override fun onEnabled(context: Context) {
         // Enter relevant functionality for when the first widget is created
@@ -46,16 +52,27 @@ class StickerWidget : AppWidgetProvider() {
     }
 }
 internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
+    val PREF_PREFIX_KEY = "appwidget_"
 
 
-    val widgetText = loadTitlePref(context, appWidgetId)
+    //    fetch noteid from pref
+    val PREFS_NAME = "com.naman.stickernotes.StickerWidget"
+    val prefs = context.getSharedPreferences(PREFS_NAME, 0)
+    val noteId = prefs.getString("noteid_" + appWidgetId, "fuck")
+
+    val titleValue = prefs.getString(PREF_PREFIX_KEY + appWidgetId, null)
     // Construct the RemoteViews object
     val views = RemoteViews(context.packageName, R.layout.sticker_widget)
-    views.setTextViewText(R.id.appwidget_text, widgetText)
-    val intent = Intent(context, MainActivity::class.java)
-    val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+    views.setTextViewText(R.id.appwidget_text, titleValue)
+
+    val intent = Intent(context, NoteOpen::class.java)
+        intent.putExtra("id", noteId)
+    val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
     // Instruct the widget manager to update the widget
     appWidgetManager.updateAppWidget(appWidgetId, views)
+
     views.setOnClickPendingIntent(R.id.appwidget_text, pendingIntent);
-    appWidgetManager.updateAppWidget(appWidgetId, views);
+    appWidgetManager.updateAppWidget(appWidgetId, views)
+
+
 }

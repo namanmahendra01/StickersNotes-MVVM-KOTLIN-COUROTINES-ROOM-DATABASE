@@ -18,6 +18,12 @@ interface NoteDao {
     @Query("Select * from notes_table")
     fun getNotesTittle():List<Note>
 
+    @Query("Select * from notes_table where id=:fetchId")
+    fun getNote(fetchId:Int):Note
+
+    @Query("UPDATE NOTES_TABLE SET note_text=:title, full_note=:fulltext  WHERE id = :id")
+    suspend fun updateNote(title:String,fulltext:String,id:Int)
+
 
 
 

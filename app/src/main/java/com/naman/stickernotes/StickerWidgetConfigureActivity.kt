@@ -1,6 +1,7 @@
 package com.naman.stickernotes
 
 import android.app.Activity
+import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.ContentValues.TAG
 import android.content.Context
@@ -9,6 +10,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.EditText
+import android.widget.RemoteViews
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.naman.stickernotes.Data.Note
 import com.naman.stickernotes.Data.NoteDatabase
@@ -19,6 +21,27 @@ import kotlinx.android.synthetic.main.sticker_widget_configure.*
  */
 class StickerWidgetConfigureActivity : Activity(),NotesAdapter.InNotesRvAdapter {
     var selectedNote:String =""
+    var noteId:Int=0
+
+//    //    fetch noteid from pref
+//    val PREFS_NAME = "com.naman.stickernotes.StickerWidget"
+//    val prefs = context.getSharedPreferences(PREFS_NAME, 0)
+//    val noteId = prefs.getString("noteid_" + appWidgetId, null)
+//
+//    // Construct the RemoteViews object
+//    val widgetText = loadTitlePref(context, appWidgetId)
+//    val views = RemoteViews(context.packageName, R.layout.sticker_widget)
+//    views.setTextViewText(R.id.appwidget_text, widgetText)
+//
+//    // Instruct the widget manager to update the widget
+//    appWidgetManager.updateAppWidget(appWidgetId, views)
+//
+//    //  click listener on widget
+//    val intent = Intent(context, NoteOpen::class.java)
+//    intent.putExtra("id", noteId)
+//    val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+//    views.setOnClickPendingIntent(R.id.appwidget_text, pendingIntent)
+
 
     private var appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
     private lateinit var appWidgetText: EditText
@@ -26,7 +49,8 @@ class StickerWidgetConfigureActivity : Activity(),NotesAdapter.InNotesRvAdapter 
 
         val context = this
 
-        saveTitlePref(context, appWidgetId, selectedNote)
+        Log.d(TAG, "ninini: "+noteId+"   "+selectedNote)
+        saveTitlePref(context, appWidgetId, selectedNote,noteId)
 
         // It is the responsibility of the configuration activity to update the app widget
         val appWidgetManager = AppWidgetManager.getInstance(context)
@@ -78,13 +102,14 @@ class StickerWidgetConfigureActivity : Activity(),NotesAdapter.InNotesRvAdapter 
 //        appWidgetText.setText(loadTitlePref(this@StickerWidgetConfigureActivity, appWidgetId))
     }
 
-    override fun onItemClicked(note: Note?) {
+    override fun onItemClicked(note: Note?,action:String) {
         if (note != null) {
-            Log.d(TAG, "onItemClicked: "+note.text)
             selectedNote=note.text
+            noteId=note.id
 
         }else{
             selectedNote=""
+            noteId=0
         }
     }
 
@@ -94,9 +119,11 @@ private const val PREFS_NAME = "com.naman.stickernotes.StickerWidget"
 private const val PREF_PREFIX_KEY = "appwidget_"
 
 // Write the prefix to the SharedPreferences object for this widget
-internal fun saveTitlePref(context: Context, appWidgetId: Int, text: String) {
+internal fun saveTitlePref(context: Context, appWidgetId: Int, text: String, noteId: Int) {
     val prefs = context.getSharedPreferences(PREFS_NAME, 0).edit()
     prefs.putString(PREF_PREFIX_KEY + appWidgetId, text)
+    Log.d(TAG, "saveTitlePref: "+noteId)
+    prefs.putString("noteid_" + appWidgetId, noteId.toString())
     prefs.apply()
 }
 
@@ -105,6 +132,7 @@ internal fun saveTitlePref(context: Context, appWidgetId: Int, text: String) {
 internal fun loadTitlePref(context: Context, appWidgetId: Int): String {
     val prefs = context.getSharedPreferences(PREFS_NAME, 0)
     val titleValue = prefs.getString(PREF_PREFIX_KEY + appWidgetId, null)
+    Log.d(TAG, "loadTitlePref: "+"noteid_" +  prefs.getString("noteid_" + appWidgetId, null))
     return titleValue ?: context.getString(R.string.appwidget_text)
 }
 
@@ -112,5 +140,7 @@ internal fun loadTitlePref(context: Context, appWidgetId: Int): String {
 internal fun deleteTitlePref(context: Context, appWidgetId: Int) {
     val prefs = context.getSharedPreferences(PREFS_NAME, 0).edit()
     prefs.remove(PREF_PREFIX_KEY + appWidgetId)
+    prefs.remove("noteid_" + appWidgetId)
+
     prefs.apply()
 }

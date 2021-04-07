@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#FFE596"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="5dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginRight="5dp"
+    android:layout_marginLeft="5dp"
+    app:cardBackgroundColor="#FFE596"
+    app:cardElevation="5dp">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:layout_margin="5dp"
     xmlns:tools="http://schemas.android.com/tools">
     <TextView
@@ -26,6 +35,7 @@
             android:src="@drawable/ic_delete"
             android:id="@+id/delete"
             />
+
     <ImageView
         android:layout_width="30dp"
         android:layout_height="30dp"
@@ -36,3 +46,4 @@
         android:src="@drawable/ic_check"
         android:id="@+id/check"/>
 </RelativeLayout>
+</androidx.cardview.widget.CardView>

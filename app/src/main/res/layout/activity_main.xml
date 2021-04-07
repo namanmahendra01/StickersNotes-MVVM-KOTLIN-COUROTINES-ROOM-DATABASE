@@ -4,26 +4,50 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/white"
     tools:context=".MainActivity">
-
+<include layout="@layout/snippet_bar"
+    />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_below="@+id/topbar"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:textSize="25sp"
+        android:textSize="20sp"
         android:id="@+id/textEt"
-        android:hint="Enter here"
-        android:autofillHints=""
-        android:inputType="text" />
-
+        android:background="@drawable/rectangular_border"
+        android:hint="Enter Title here"
+        android:padding="10dp"
+         />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:textSize="20sp"
+        android:layout_below="@+id/textEt"
+        android:id="@+id/fulltextEt"
+        android:padding="10dp"
+        android:background="@drawable/rectangular_border"
+        android:minHeight="150dp"
+        android:hint="Write note here"
+        android:gravity="top"
+        />
 
 <Button
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:text="Add Note"
     android:onClick="submitNote"
-    android:layout_below="@+id/textEt"
+    android:layout_below="@+id/fulltextEt"
     android:layout_centerHorizontal="true"
+    android:background="@drawable/black_border"
+    android:textColor="@color/white"
     android:id="@+id/addBtn"/>
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
@@ -31,4 +55,7 @@
         android:id="@+id/recyclerView"
         android:layout_marginTop="10dp"
         android:layout_below="@+id/addBtn"/>
+        </RelativeLayout>
+    </ScrollView>
+
 </RelativeLayout>
